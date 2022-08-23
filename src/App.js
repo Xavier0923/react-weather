@@ -9,16 +9,22 @@ function App() {
   const [weather, setWeather] = useState(null);
   const [units, setUnits] = useState("metric");
   const [bg, setBg] = useState(hotBG);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchWeatherData = async () => {
-      const data = await getFormattedWeatherData(city, units);
-      setWeather(data);
-
-      const threshold = units === "metric" ? 20 : 70;
-      console.log(threshold)
-      if (data.temp <= threshold) setBg(coldBG);
-      else setBg(hotBG);
+      const data = await getFormattedWeatherData(city, units).catch((err) => {
+        console.log(err);
+        setError(true);
+      });
+      if(data){
+        setWeather(data);
+        console.log(data);
+        const threshold = units === "metric" ? 20 : 70;
+        console.log(threshold)
+        if (data.temp <= threshold) setBg(coldBG);
+        else setBg(hotBG);
+      }
     }
     fetchWeatherData();
   }, [units, city]);
@@ -32,6 +38,7 @@ function App() {
   }
 
   const enterKeyPressed = (e) => {
+    setError(false);
     if (e.keyCode === 13) {
       setCity(e.target.value);
       e.currentTarget.blur();
@@ -39,12 +46,15 @@ function App() {
   }
 
   return (
-    <div className="app" style={{'backgroundImage': `url(${bg})`, 'backgroundSize': 'cover'}}>
+    <div className="app" style={{ 'backgroundImage': `url(${bg})`, 'backgroundSize': 'cover' }}>
       <div className='overlay'>
         {weather && (
           <div className='container'>
             <div className='section section_inputs'>
-              <input type="text" name="city" onKeyDown={enterKeyPressed} placeholder='Enter City...' />
+              <div className='inputs'>
+                <input type="text" name="city" onKeyDown={enterKeyPressed} placeholder='Enter City...' />
+                {error && <div className='ErrorMessage'>Can't Find This City!!</div>}
+              </div>
               <button onClick={handleUnitsClick}>°F</button>
             </div>
 

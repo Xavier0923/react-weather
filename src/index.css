@@ -41,7 +41,7 @@
   background-color: var(--section-overlay);
 }
 
-.section_inputs>input{
+.section_inputs>.inputs>input{
   border: 0.8px solid #fff;
   border-radius: 0.4rem;
   background: transparent;
@@ -51,7 +51,15 @@
   font-weight: 200;
 }
 
-.section_inputs>input:focus{
+.ErrorMessage{
+  color: #fff;
+  background: red;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.section_inputs>.inputs>input:focus{
   outline: none;
 }
 
